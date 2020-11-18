@@ -13,8 +13,8 @@ void at_clcc_query_all(at_command_t *cmd)
 	STR_ALLOC(cmd->str_cmd, sizeof("AT+CLCC") + 3 /* \r\n\0 */);
 	strcpy(cmd->str_cmd.s, "AT+CLCC\r\n");
 
-	cmd->id		= AT_CLCC;
-	cmd->type	= AT_TYPE_QUERY_ALL;
+	cmd->id = AT_CLCC;
+	cmd->type = AT_TYPE_QUERY_ALL;
 }
 
 _bool at_clcc_parse_response(at_io_t *io, at_clcc_resp_t *clcc)
@@ -31,25 +31,27 @@ _bool at_clcc_parse_response(at_io_t *io, at_clcc_resp_t *clcc)
 
 		if (!strstr(io->response.s, "+CLCC:")) // no incoming call
 		{
-			clcc->status	= CS_NOTHING;
+			clcc->status = CS_NOTHING;
 			return TRUE;
 		}
 
 		bzero(clcc->number, sizeof(clcc->number));
-		sscanf(io->response.s, "AT+CLCC\r\n+CLCC: %d,%d,%d,%d,%d,\"+%s\",145", &clcc->idx,
-																		&clcc->mode,
-																		&clcc->status,
-																		&clcc->type,
-																		&clcc->multy_party,
-																		clcc->number);
+		sscanf(io->response.s, "\r\n+CLCC: %d,%d,%d,%d,%d,\"%s\",129,\"\",\r\n",
+			   &clcc->idx,
+			   &clcc->mode,
+			   &clcc->status,
+			   &clcc->type,
+			   &clcc->multy_party,
+			   clcc->number);
 
 		LOG(L_DEBUG, "%s: CLCC -> idx=%d mode=%d status=%d type=%d multiparty=%d number=%s\n", __FUNCTION__,
-																				clcc->idx,
-																				clcc->mode,
-																				clcc->status,
-																				clcc->type,
-																				clcc->multy_party,
-																				clcc->number);
+			clcc->idx,
+			clcc->mode,
+			clcc->status,
+			clcc->type,
+			clcc->multy_party,
+			clcc->number);
+
 		return TRUE;
 	case AT_TYPE_ASSIGN:
 	case AT_TYPE_QUERY_VALUE:

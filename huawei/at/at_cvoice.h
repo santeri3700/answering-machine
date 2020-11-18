@@ -11,8 +11,6 @@
 #include "../../util.h"
 #include "../modem.h"
 
-#define CVOICE_QUERY_ALL_PATTERN "CVOICE:([0-9]+),([0-9]+),([0-9]+),([0-9]+)"
-
 typedef struct at_cvoice_resp
 {
 	int mode;
